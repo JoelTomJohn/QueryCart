@@ -1,4 +1,4 @@
-# QueryCart — Ask your orders anything.
+# QueryCart — Every Order Made Easy.
 
 > **AI-Powered Order Intelligence for E-Commerce**
 
