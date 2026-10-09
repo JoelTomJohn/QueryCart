@@ -32,6 +32,7 @@ QueryCart utilizes a **unified fullstack service pattern** on Render configured 
 - This pattern eliminates cross-origin latency, CORS preflight overhead, and dual-server orchestration costs on free/starter tiers.
 
 ## 5. Future Improvements
+- **Excel File Upload**: Allow users to upload Excel (`.xlsx`) or CSV files directly through the dashboard, enabling QueryCart to analyze their own order data instead of relying only on the existing dataset.
 - **Database Persistence**: Transition the static CSV into PostgreSQL with SQLAlchemy/Tortoise-ORM for multi-tenant streaming order updates and indexing.
 - **Dynamic Visualization**: Add automatic charting (e.g., Recharts) rendered dynamically based on tool metrics outputs.
 - **Semantic Product Search**: Incorporate vector embeddings (pgvector) to support natural language queries for vague product descriptions.
