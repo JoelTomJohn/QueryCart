@@ -45,10 +45,11 @@ export default function OrdersTable({
   const filteredOrders = useMemo(() => {
     let list = orders;
     if (statusFilter !== 'all') {
-      list = list.filter((o) => (o.status || '').toLowerCase() === statusFilter);
+      const targetStatus = statusFilter.toLowerCase().trim();
+      list = list.filter((o) => (o.status || '').toLowerCase().trim() === targetStatus);
     }
     if (searchTerm.trim()) {
-      const q = searchTerm.toLowerCase();
+      const q = searchTerm.toLowerCase().trim();
       list = list.filter((o) =>
         (o.order_id && o.order_id.toLowerCase().includes(q)) ||
         (o.customer_name && o.customer_name.toLowerCase().includes(q)) ||
@@ -63,14 +64,36 @@ export default function OrdersTable({
   // Display limit: if full view, show up to 60; if overview view, show top 7
   const displayedOrders = isFullView ? filteredOrders : filteredOrders.slice(0, 7);
 
-  const statuses = [
+  const statusCounts = useMemo(() => {
+    const counts = { all: orders.length, delivered: 0, cancelled: 0, returned: 0, shipped: 0, processing: 0 };
+    orders.forEach((o) => {
+      const s = (o.status || '').toLowerCase().trim();
+      if (counts[s] !== undefined) {
+        counts[s] += 1;
+      }
+    });
+    return counts;
+  }, [orders]);
+
+  const statuses = useMemo(() => [
     { id: 'all', label: 'All Orders' },
-    { id: 'delivered', label: 'Delivered (48)' },
-    { id: 'cancelled', label: 'Cancelled (7)' },
-    { id: 'returned', label: 'Returned (3)' },
-    { id: 'shipped', label: 'Shipped (1)' },
-    { id: 'processing', label: 'Processing (1)' },
-  ];
+    { id: 'delivered', label: `Delivered (${statusCounts.delivered})` },
+    { id: 'cancelled', label: `Cancelled (${statusCounts.cancelled})` },
+    { id: 'returned', label: `Returned (${statusCounts.returned})` },
+    { id: 'shipped', label: `Shipped (${statusCounts.shipped})` },
+    { id: 'processing', label: `Processing (${statusCounts.processing})` },
+  ], [statusCounts]);
+
+  const countMessage = useMemo(() => {
+    const displayedCount = displayedOrders.length;
+    const totalMatching = filteredOrders.length;
+    const totalAvailable = orders.length;
+
+    if (statusFilter === 'all' && !searchTerm.trim()) {
+      return `Displaying ${displayedCount} of ${totalAvailable} real orders`;
+    }
+    return `Displaying ${displayedCount} of ${totalMatching} matching orders`;
+  }, [displayedOrders.length, filteredOrders.length, orders.length, statusFilter, searchTerm]);
 
   return (
     <div className={`orders-card ${isFullView ? 'full-view' : ''}`} id="orders-section">
@@ -129,6 +152,8 @@ export default function OrdersTable({
           {statuses.map((s) => (
             <button
               key={s.id}
+              id={`status-filter-${s.id}`}
+              data-testid={`filter-${s.id}`}
               type="button"
               role="tab"
               aria-selected={statusFilter === s.id}
@@ -205,16 +230,16 @@ export default function OrdersTable({
         </table>
       </div>
 
-      {!isFullView && orders.length > 7 && (
+      {!isFullView && (
         <div className="orders-card-footer">
-          <span>Displaying 7 of {orders.length} real orders</span>
-          {onNavigateToOrders && (
+          <span className="footer-count-text">{countMessage}</span>
+          {onNavigateToOrders && orders.length > 0 && (
             <button
               type="button"
               className="footer-view-more"
               onClick={onNavigateToOrders}
             >
-              Explore all 60 orders →
+              Explore all {orders.length} orders →
             </button>
           )}
         </div>

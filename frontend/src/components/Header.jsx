@@ -20,7 +20,7 @@ export default function Header({
   };
 
   const tabSubtitles = {
-    overview: 'Real-time e-commerce performance and AI order intelligence across 60 transactions',
+    overview: 'Your orders, sales, and AI-powered insights — all in one place.',
     orders: 'Explore, filter, and inspect verified orders from June 2026 to September 2026',
     assistant: 'Ask questions about customers, revenue, status, and cancellations with Gemini function calling'
   };

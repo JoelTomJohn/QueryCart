@@ -5,10 +5,6 @@ import {
   ShoppingBag,
   Bot,
   RotateCcw,
-  Database,
-  Zap,
-  CheckCircle,
-  FileSpreadsheet,
   X
 } from 'lucide-react';
 
@@ -56,7 +52,7 @@ export default function Sidebar({
           </div>
           <div className="brand-text-block">
             <div className="brand-title">QueryCart</div>
-            <div className="brand-tagline">Ask your orders anything.</div>
+            <div className="brand-tagline">Every Order Made Easy.</div>
             <div className="brand-subtitle">AI-Powered Order Intelligence</div>
           </div>
         </div>
@@ -104,58 +100,6 @@ export default function Sidebar({
             );
           })}
         </nav>
-      </div>
-
-      {/* System Health / Status info */}
-      <div className="sidebar-content">
-        <div>
-          <div className="section-label">System Health</div>
-          <div className="status-card">
-            <div className="status-row">
-              <span className="status-label-muted">API Status</span>
-              <span className={`status-pill ${isHealthy ? 'online' : 'degraded'}`}>
-                <span className="pulse-dot" />
-                {isHealthy ? 'Connected' : 'Connecting...'}
-              </span>
-            </div>
-            <div className="status-row">
-              <span className="status-label-muted">Dataset</span>
-              <span className="status-val-highlight">
-                <Database size={13} />
-                {totalOrders} Orders Loaded
-              </span>
-            </div>
-            <div className="status-row">
-              <span className="status-label-muted">AI Engine</span>
-              <span className="status-val-ai">
-                <Zap size={13} />
-                {isAiConfigured ? 'Gemini Active' : 'Key Needed'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <div className="section-label">Dataset Specs</div>
-          <div className="specs-card">
-            <div className="specs-row">
-              <span className="specs-bullet">•</span>
-              <span><strong>Range:</strong> Jun 2026 – Sep 2026</span>
-            </div>
-            <div className="specs-row">
-              <span className="specs-bullet">•</span>
-              <span><strong>Currency:</strong> INR (₹)</span>
-            </div>
-            <div className="specs-row">
-              <span className="specs-bullet">•</span>
-              <span><strong>Tools:</strong> Lookup, Search, Metrics</span>
-            </div>
-            <div className="specs-row">
-              <span className="specs-bullet">•</span>
-              <span><strong>Authoritative:</strong> Python Engine</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Sidebar Footer */}

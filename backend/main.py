@@ -13,7 +13,7 @@ from backend.ai_agent import run_chat_turn
 
 app = FastAPI(
     title="QueryCart API",
-    description="Ask your orders anything - AI-Powered Order Intelligence",
+    description="Every Order Made Easy. - AI-Powered Order Intelligence",
     version="1.0.0"
 )
 

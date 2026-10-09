@@ -6,6 +6,7 @@ import CategoryChart from './components/CategoryChart';
 import OrdersTable from './components/OrdersTable';
 import MessageList from './components/MessageList';
 import ChatInput from './components/ChatInput';
+import SplashScreen from './components/SplashScreen';
 import * as api from './api';
 import { Bot, Sparkles, MessageSquareCode } from 'lucide-react';
 
@@ -33,7 +34,8 @@ const INITIAL_DASHBOARD = {
   all_orders: [],
 };
 
-export default function App() {
+export default function App({ initialShowSplash = true }) {
+  const [showSplash, setShowSplash] = useState(initialShowSplash);
   const [activeTab, setActiveTab] = useState('overview');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -145,6 +147,10 @@ export default function App() {
 
   return (
     <div className="app-container">
+      {showSplash && (
+        <SplashScreen onComplete={() => setShowSplash(false)} duration={1800} />
+      )}
+
       <Sidebar
         health={health}
         onResetChat={handleResetChat}
@@ -180,9 +186,9 @@ export default function App() {
                   {/* Recent Orders Preview */}
                   <OrdersTable
                     orders={
-                      dashboardData.recent_orders && dashboardData.recent_orders.length > 0
-                        ? dashboardData.recent_orders
-                        : dashboardData.all_orders
+                      dashboardData.all_orders && dashboardData.all_orders.length > 0
+                        ? dashboardData.all_orders
+                        : (dashboardData.recent_orders || [])
                     }
                     onSelectOrderQuery={handleSelectOrderQuery}
                     onNavigateToOrders={() => setActiveTab('orders')}

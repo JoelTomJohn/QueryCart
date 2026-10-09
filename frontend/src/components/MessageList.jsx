@@ -27,7 +27,7 @@ export default function MessageList({
           <div className="welcome-icon-glow">
             <Bot size={26} />
           </div>
-          <h2 className="welcome-hero-title">Ask your orders anything.</h2>
+          <h2 className="welcome-hero-title">Every Order Made Easy.</h2>
           <p className="welcome-hero-subtitle">
             QueryCart queries your verified 60-order dataset using Google Gemini function calling and authoritative Python calculations.
             Click any suggested query below or type your own question:

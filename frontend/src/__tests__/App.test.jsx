@@ -48,9 +48,9 @@ describe('QueryCart App Component', () => {
   it('renders branding, tagline, and the 4 example queries', async () => {
     render(<App />);
 
-    expect(screen.getByText('QueryCart')).toBeInTheDocument();
-    expect(screen.getAllByText('Ask your orders anything.').length).toBeGreaterThan(0);
-    expect(screen.getByText('AI-Powered Order Intelligence')).toBeInTheDocument();
+    expect(screen.getAllByText('QueryCart').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Every Order Made Easy.').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('AI-Powered Order Intelligence').length).toBeGreaterThan(0);
 
     expect(screen.getByText('What is the status of order ORD-1025?')).toBeInTheDocument();
     expect(screen.getByText('How many orders were cancelled?')).toBeInTheDocument();
@@ -58,9 +58,14 @@ describe('QueryCart App Component', () => {
     expect(screen.getByText('Which customer has spent the most?')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText('60 Orders Loaded')).toBeInTheDocument();
-      expect(screen.getByText('Gemini Active')).toBeInTheDocument();
+      expect(screen.getByText('Welcome to QueryCart')).toBeInTheDocument();
+      expect(screen.getByText('System Active')).toBeInTheDocument();
+      expect(screen.getByText('Your orders, sales, and AI-powered insights — all in one place.')).toBeInTheDocument();
     });
+
+    // Verify System Health and Dataset Specs are removed from the dashboard
+    expect(screen.queryByText('System Health')).not.toBeInTheDocument();
+    expect(screen.queryByText('Dataset Specs')).not.toBeInTheDocument();
   });
 
   it('handles sending a message and renders the assistant response with tool badges', async () => {
@@ -153,5 +158,57 @@ describe('QueryCart App Component', () => {
     // Retry button is NOT displayed, preventing retry loops
     expect(screen.queryByRole('button', { name: /retry/i })).not.toBeInTheDocument();
   });
+
+  it('filters Overview Recent Orders by status and updates the dynamic order-count message', async () => {
+    api.fetchDashboard.mockResolvedValueOnce({
+      metrics: {
+        total_orders: 4,
+        net_sales_inr: 7500,
+        delivered_sales_inr: 500,
+        gross_sales_inr: 7500,
+        delivered_orders: 1,
+        cancelled_orders: 1,
+        cancelled_amount_inr: 4000,
+        cancellation_rate_percent: 25,
+        returned_orders: 2,
+        processing_orders: 0,
+        shipped_orders: 0,
+      },
+      category_sales: [],
+      recent_orders: [],
+      all_orders: [
+        { order_id: 'ORD-2001', customer_name: 'Pooja', product: 'Lamp', city: 'Delhi', category: 'Furniture', quantity: 1, total_inr: 1000, status: 'returned', order_date: '2026-09-01' },
+        { order_id: 'ORD-2002', customer_name: 'Rahul', product: 'Desk', city: 'Pune', category: 'Furniture', quantity: 1, total_inr: 2000, status: 'returned', order_date: '2026-09-02' },
+        { order_id: 'ORD-2003', customer_name: 'Amit', product: 'Book', city: 'Goa', category: 'Stationery', quantity: 1, total_inr: 500, status: 'delivered', order_date: '2026-09-03' },
+        { order_id: 'ORD-2004', customer_name: 'Sara', product: 'Chair', city: 'Mumbai', category: 'Furniture', quantity: 1, total_inr: 4000, status: 'cancelled', order_date: '2026-09-04' },
+      ]
+    });
+
+    render(<App />);
+
+    // Wait for dashboard data to load
+    await waitFor(() => {
+      expect(screen.getByText('Displaying 4 of 4 real orders')).toBeInTheDocument();
+    });
+
+    // Click Returned filter pill in Overview
+    const returnedTab = screen.getByRole('tab', { name: /returned/i });
+    fireEvent.click(returnedTab);
+
+    // Verify only returned orders are visible
+    expect(screen.getByText('ORD-2001')).toBeInTheDocument();
+    expect(screen.getByText('ORD-2002')).toBeInTheDocument();
+    expect(screen.queryByText('ORD-2003')).not.toBeInTheDocument();
+
+    // Verify dynamic count message updates
+    expect(screen.getByText('Displaying 2 of 2 matching orders')).toBeInTheDocument();
+
+    // Click All Orders to restore
+    const allTab = screen.getByRole('tab', { name: /all/i });
+    fireEvent.click(allTab);
+    expect(screen.getByText('Displaying 4 of 4 real orders')).toBeInTheDocument();
+    expect(screen.getByText('ORD-2003')).toBeInTheDocument();
+  });
 });
+
 
