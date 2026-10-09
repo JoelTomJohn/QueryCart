@@ -6,6 +6,25 @@ QueryCart is a production-grade fullstack order analytics platform that connects
 
 ---
 
+## Screenshots
+
+### Executive Analytics Dashboard
+Real-time KPI metrics, category revenue distributions, and instant AI query launchpads.
+
+![QueryCart Dashboard](screenshots/dashboard.png)
+
+### AI Order Assistant
+Conversational interface powered by Google Gemini function calling and deterministic Python calculations.
+
+![QueryCart AI Assistant](screenshots/ai-assistant.png)
+
+### Order Filters & Management
+Instant order table indexing with multi-status filtering (Delivered, Cancelled, Returned, Shipped, Processing) and search.
+
+![QueryCart Order Filters](screenshots/order-filters.png)
+
+---
+
 ## Architecture Overview
 
 ```
